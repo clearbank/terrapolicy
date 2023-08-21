@@ -1,0 +1,6 @@
+resources:
+  - type: attributes_policy
+    params:
+      resource: azurerm_application_insights
+      attribute: workspace_id
+      strategy: "fail_if_missing"

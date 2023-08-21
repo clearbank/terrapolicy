@@ -1,0 +1,25 @@
+providers:
+  - type: version_policy
+    params:
+      provider: registry.terraform.io/hashicorp/azurerm
+      value: "2.70"
+      strategy: minimum_version
+  - type: version_policy
+    params:
+      provider: registry.terraform.io/hashicorp/azurerm
+      value:
+        - "3.44"
+        - "3.45"
+      strategy: exclude
+resources:
+  - type: attributes_policy
+    params:
+      resource: azurerm_application_insights
+      attribute: workspace_id
+      value: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/mock/providers/Microsoft.OperationalInsights/workspaces/mock"
+      strategy: "set_if_missing"
+  - type: attributes_policy
+    params:
+      resource: azurerm_application_insights
+      attribute: workspace_id
+      strategy: "fail_if_set"

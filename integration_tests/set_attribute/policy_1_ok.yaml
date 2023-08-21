@@ -1,0 +1,7 @@
+resources:
+  - type: attributes_policy
+    params:
+      resource: azurerm_application_insights
+      attribute: workspace_id
+      value: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/mock/providers/Microsoft.OperationalInsights/workspaces/mock"
+      strategy: "set_if_missing"

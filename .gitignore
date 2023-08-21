@@ -1,0 +1,8 @@
+.terraform/
+.terraform.lock.hcl
+
+/terrapolicy
+/policy_validator
+
+#Integration test temp location
+__tmp

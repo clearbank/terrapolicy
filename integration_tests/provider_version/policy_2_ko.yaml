@@ -1,0 +1,8 @@
+providers:
+  - type: version_policy
+    params:
+      provider: registry.terraform.io/hashicorp/azurerm
+      value:
+        - "3.44"
+        - "2.71"
+      strategy: exclude
