@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Go fmt
+        run: |
+          ! go fmt ./... | read
+      - name: Go vet
+        run: |
+          ! go vet ./... | read
+      - name: Go staticcheck
+        uses: dominikh/staticcheck-action@v1.2.0
+        with:
+          version: "2022.1"
+          install-go: false
+      - name: Go Test
+        run: SKIP_INTEGRATION_TESTS=1 go test -v ./...
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform_version: ["12", "13", "14", "15", "latest"]
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v4
+      - name: Get dependencies
+        run: |
+          go mod tidy
+      - name: Install tfenv
+        run: |
+          git clone https://github.com/tfutils/tfenv.git $GITHUB_WORKSPACE/.tfenv
+          echo "$GITHUB_WORKSPACE/.tfenv/bin" >> $GITHUB_PATH
+      - name: Install terraform
+        working-directory: test/tfenvconf/terraform_${{ matrix.terraform_version }}
+        run: |
+          tfenv install
+          tfenv use
+      - name: Print Terraform version
+        run: |
+          terraform --version
+      - name: Test
+        run: |
+          go test -v
