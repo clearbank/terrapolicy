@@ -1,0 +1,13 @@
+resources:
+  - type: attributes_policy
+    params:
+      resource: azurerm_storage_account
+      attribute: min_tls_version
+      value: "TLS1_2"
+      strategy: "force_set"
+  - type: attributes_policy
+    params:
+      resource: azurerm_storage_account
+      attribute: blob_properties.delete_retention_policy.days
+      value: 35
+      strategy: "set_if_missing"

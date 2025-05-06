@@ -18,3 +18,24 @@ resource "azurerm_application_insights" "test" {
   resource_group_name = "mock"
   application_type    = "web"
 }
+
+resource "azurerm_storage_account" "test_1" {
+  name                     = "mockstorageaccount"
+  resource_group_name      = "mock"
+  location                 = "uksouth"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_account" "test_2" {
+  name                     = "mockstorageaccount"
+  resource_group_name      = "mock"
+  location                 = "uksouth"
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  blob_properties {
+    delete_retention_policy {
+      days = 22
+    }
+  }
+}

@@ -3,12 +3,13 @@ package tfschema
 import (
 	"errors"
 	"fmt"
-	"github.com/clearbank/terrapolicy/internals/providers"
-	"github.com/clearbank/terrapolicy/internals/terraform"
-	"github.com/clearbank/terrapolicy/internals/utils"
 	"log"
 	"strings"
 	"sync"
+
+	"github.com/clearbank/terrapolicy/internals/providers"
+	"github.com/clearbank/terrapolicy/internals/terraform"
+	"github.com/clearbank/terrapolicy/internals/utils"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/hcl/v2/hclwrite"
@@ -19,9 +20,9 @@ var providerToClientMapLock sync.Mutex
 var providerToClientMap = map[string]tfschema.Client{}
 
 //export forward
-type Attribute = tfschema.Attribute
+type Block = tfschema.Block
 
-func GetSchemaForBlock(resource *hclwrite.Block, rootDir string) (map[string]*tfschema.Attribute, error) {
+func GetSchemaForBlock(resource *hclwrite.Block, rootDir string) (*tfschema.Block, error) {
 	resourceType := terraform.GetResourceType(resource)
 	providerName, ok := isResourceSupported(resourceType)
 	if !ok {
@@ -46,7 +47,7 @@ func GetSchemaForBlock(resource *hclwrite.Block, rootDir string) (map[string]*tf
 		return nil, err
 	}
 
-	return typeSchema.Attributes, nil
+	return typeSchema, nil
 }
 
 func getTfSchemaClient(providerName string, rootDir string) (tfschema.Client, error) {

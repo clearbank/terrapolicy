@@ -3,18 +3,20 @@ package terrapolicy
 import (
 	"bytes"
 	"fmt"
-	"github.com/clearbank/terrapolicy/internals/cli"
-	"github.com/clearbank/terrapolicy/internals/file"
-	"github.com/clearbank/terrapolicy/internals/policies"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
 
+	"github.com/clearbank/terrapolicy/internals/cli"
+	"github.com/clearbank/terrapolicy/internals/file"
+	"github.com/clearbank/terrapolicy/internals/policies"
+
+	"log"
+
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/logutils"
-	"log"
 
 	. "github.com/onsi/gomega"
 )
