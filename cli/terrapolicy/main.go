@@ -2,16 +2,19 @@ package main
 
 import (
 	"fmt"
-	"github.com/clearbank/terrapolicy"
-	"github.com/clearbank/terrapolicy/internals/cli"
-	"github.com/clearbank/terrapolicy/internals/policies"
 	"io"
 	"log"
 	"os"
+	"strings"
 
+	"github.com/clearbank/terrapolicy"
+	"github.com/clearbank/terrapolicy/internals/cli"
+	"github.com/clearbank/terrapolicy/internals/policies"
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/logutils"
 )
+
+var version = "dev"
 
 func initLogFiltering(verbose bool) {
 	level := "INFO"
@@ -45,6 +48,18 @@ func main() {
 			fmt.Fprintf(os.Stderr, "[ERROR] code: %v\n", err)
 			os.Exit(1)
 		}
+	}
+
+	if args.Version {
+		var versionPrefix string
+
+		if !strings.HasPrefix(version, "v") {
+			versionPrefix = "v"
+		}
+
+		fmt.Printf("Terrapolicy %s%s\n", versionPrefix, version)
+
+		return
 	}
 
 	initLogFiltering(args.Verbose)

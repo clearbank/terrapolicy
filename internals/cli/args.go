@@ -3,6 +3,7 @@ package cli
 import (
 	"errors"
 	"flag"
+
 	"github.com/clearbank/terrapolicy/internals/file"
 )
 
@@ -12,6 +13,7 @@ type Args struct {
 	Verbose bool
 	Dir     string
 	Help    bool
+	Version bool
 }
 
 var TERRAPOLICY_DEFAULT_POLICY_NAME = ".terrapolicy.yaml"
@@ -25,6 +27,7 @@ func ParseArgs(programName string, programArgs []string) (Args, error) {
 	fs.BoolVar(&args.Verbose, "verbose", false, "Verbose logging")
 	fs.BoolVar(&args.Help, "help", false, "Usage")
 	fs.StringVar(&args.Dir, "dir", ".", "cwd")
+	fs.BoolVar(&args.Version, "version", false, "Prints the version")
 
 	err := fs.Parse(programArgs)
 
@@ -34,6 +37,9 @@ func ParseArgs(programName string, programArgs []string) (Args, error) {
 	if args.Help {
 		fs.Usage()
 		return args, errors.New("args")
+	}
+	if args.Version {
+		return args, nil
 	}
 
 	if args.Config != "" && !file.Exists(args.Config) {
