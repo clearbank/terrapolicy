@@ -59,14 +59,10 @@ func (s *AttributesPolicy) Execute(payload policies.ResourcePolicyPayload) (poli
 
 			schema, err := tfschema.GetSchemaForBlock(resource, payload.WorkingDir)
 			if err != nil {
-				return result, fmt.Errorf("cannot retrieve schema: %v", err)
+				return result, nil
 			}
 
-			attributeType, err := getTypeForAttribute(schema, attributePath)
-			if err != nil {
-				return result, err
-			}
-
+			attributeType := getTypeForAttribute(schema, attributePath)
 			if attributeType != cty.NilType {
 				v, err := gocty.ToCtyValue(targetValue, attributeType)
 				if err != nil {
@@ -125,20 +121,20 @@ func isAttributeSet(block *hclwrite.Block, path []string) bool {
 	return result
 }
 
-func getTypeForAttribute(schema *tfschema.Block, path []string) (cty.Type, error) {
+func getTypeForAttribute(schema *tfschema.Block, path []string) cty.Type {
 	if len(path) == 1 {
 		attributeSchema := schema.Attributes[path[0]]
 		if attributeSchema != nil {
-			return attributeSchema.Type.Type, nil
+			return attributeSchema.Type.Type
 		}
-		return cty.NilType, fmt.Errorf("cannot retrieve type for attribute: %v", path[0])
+		return cty.NilType
 	}
 
 	if nestedBlock, found := schema.BlockTypes[path[0]]; found {
 		return getTypeForAttribute(&nestedBlock.Block, path[1:])
 	}
 
-	return cty.NilType, fmt.Errorf("cannot retrieve type for attribute: %v", path[0])
+	return cty.NilType
 }
 
 func setAttribute(body *hclwrite.Body, path []string, value cty.Value) {

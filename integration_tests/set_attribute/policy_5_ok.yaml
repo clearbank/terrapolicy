@@ -11,3 +11,9 @@ resources:
       attribute: blob_properties.delete_retention_policy.days
       value: 35
       strategy: "set_if_missing"
+  - type: attributes_policy
+    params:
+      resource: azurerm_storage_account
+      attribute: blob_properties.delete_retention_policy.permanent_delete_enabled
+      value: false
+      strategy: "set_if_missing"
